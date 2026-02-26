@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Jersey+10&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+
+	</head>
+	<body id="app">
+		<div class="navigation-bar" style="display: none;">
+			<div id="back" class="back-button">
+				<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>
+				<p>Back</p>
+			</div>
+		</div>
+		<div class="view-title-screen visible" nav="false">
+			<h1 class="game-title">Pond Sudoku</h1>
+			<div class="buttons-container">
+				<div id="play" class="button"><p>Play</p></div>
+				<div class="button"><p>Resume</p><div class="secondary-content"><p class="difficulty">Difficulty</p><p>•</p><p class="resume-time">0:00</p></div></div>
+				<div class="button"><p>Settings</p></div>
+			</div>
+		</div>
+		<div class="view-play-screen hidden" style="display: none" nav="true">
+			<div class="buttons-container">
+				<div class="button difficulty" difficulty="easy"><p>Easy</p></div>
+				<div class="button difficulty" difficulty="medium"><p>Medium</p></div>
+				<div class="button difficulty" difficulty="hard"><p>Hard</p></div>
+			</div>
+		</div>
+		<div class="view-settings hidden" style="display: none">
+			
+		</div>
+		<div class="view-game game-overlay hidden" style="display: none" nav="true">
+			<div class="board-wrapper">
+				<div class="info">
+					<p class="game-difficulty">Difficulty</p>
+					<p class="time">0:00</p>
+				</div>
+				<div class="sudoku-grid"></div>
+			</div>
+			<div class="button-wrapper">
+				<div class="control-buttons">
+					<div class="control-button">
+						<svg id="undo" class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M320-200q-17 0-28.5-11.5T280-240q0-17 11.5-28.5T320-280h244q63 0 109.5-40T720-420q0-60-46.5-100T564-560H312l76 76q11 11 11 28t-11 28q-11 11-28 11t-28-11L188-572q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l144-144q11-11 28-11t28 11q11 11 11 28t-11 28l-76 76h252q97 0 166.5 63T800-420q0 94-69.5 157T564-200H320Z"/></svg>
+						<p>Undo</p>
+					</div>
+					<div id="erase" class="control-button">
+						<svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M690-240h150q17 0 28.5 11.5T880-200q0 17-11.5 28.5T840-160H610l80-80Zm-483 80q-8 0-15.5-3t-13.5-9l-73-73q-23-23-23.5-57t22.5-58l440-456q23-24 56.5-24t56.5 23l199 199q23 23 23 57t-23 57L532-172q-6 6-13.5 9t-15.5 3H207Zm279-80 314-322-198-198-442 456 64 64h262Zm-6-240Z"/></svg>
+						<p>Erase</p>
+					</div>
+					<div id="note-toggle" class="control-button" mode="disabled">
+						<svg id="icon-note-enable" class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M200-200h57l391-391-57-57-391 391v57Zm-40 80q-17 0-28.5-11.5T120-160v-97q0-16 6-30.5t17-25.5l505-504q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L313-143q-11 11-25.5 17t-30.5 6h-97Zm600-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z"/></svg>
+						<svg id="icon-note-disable" class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M817-647 650-481q-11 11-27.5 11.5T594-481q-11-11-11-28t11-28l54-54-57-57-54 54q-11 11-28 11t-28-11q-11-11-11-28t11-28l167-167q12-12 26.5-17.5T705-840q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647ZM200-200h57l195-195-28-29-29-28-195 195v57ZM764-84 509-338 313-143q-11 11-25.5 17t-30.5 6h-97q-17 0-28.5-11.5T120-160v-96q0-16 6-30.5t17-25.5l196-196L84-764q-12-12-11.5-28T85-820q12-12 28.5-12t28.5 12l679 679q12 12 11.5 28.5T820-84q-12 12-28 12t-28-12Zm-4-620-56-56 56 56Zm-169 56 57 57-57-57ZM424-424l-29-28 57 57-28-29Z"/></svg>
+						<p>Note</p>
+					</div>
+				</div>
+				<div class="number-buttons">
+					<div class="number-button" number="1">1</div>
+					<div class="number-button" number="2">2</div>
+					<div class="number-button" number="3">3</div>
+					<div class="number-button" number="4">4</div>
+					<div class="number-button" number="5">5</div>
+					<div class="number-button" number="6">6</div>
+					<div class="number-button" number="7">7</div>
+					<div class="number-button" number="8">8</div>
+					<div class="number-button" number="9">9</div>
+				</div>
+			</div>
+		</div>
+		<div class="pond">
+			<div class="shine"></div>
+			<div class="shadow-layers">
+				<div class="lily-layer"></div>
+				<div class="fish-layer"></div>
+			</div>
+		</div>
+		
+		<style>
+			:root {
+				--base-size: 1.5;
+			}
+			
+			@media (min-width: 650px) {
+				:root {
+					--base-size: 1.75;
+				}
+			}
+			
+			@media (min-width: 900px) {
+				:root {
+					--base-size: 2;
+				}
+			}
+		
+			html {
+				height: 100%;
+				width: 100%;
+				box-sizing: border-box;
+			}
+
+			#filterSource {
+				display: none;
+			}
+			
+			body {
+				margin: 0;
+				background-color: #172B32;
+				height: 100%;
+				width: 100%;
+				overflow: hidden;
+			}
+			
+			[class^="view-"][nav="true"] {
+				top: 52px;
+			}
+			
+			[class^="view-"] {
+				position: absolute;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 24px;
+				z-index: 12;
+				box-sizing: border-box;
+			}
+			
+			.buttons-container {
+				width: 100%;
+				display: flex;
+				flex-direction: column;
+				gap: 24px;
+				filter: drop-shadow(0px calc(var(--base-size)*16px) 0px rgba(1, 24, 37, 0.42));
+				align-items: center;
+				justify-content: center;
+			}
+			
+			.button {
+				background-color: #9FBC35;
+				padding: 0.6em;
+				border-radius: 8px;
+				width: 100%;
+				max-width: 300px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				box-sizing: border-box;
+			}
+			
+			.button p {
+				font-family: 'Nunito sans', Arial, sans-serif;
+				font-weight: 700;
+				margin: 0;
+				font-size: 1.2em;
+			}
+			
+			.button .secondary-content {
+				display: flex;
+				flex-direction: row;
+				gap: 4px;
+			}
+			
+			.button .secondary-content p {
+				font-size: 0.9em;
+			}
+			
+			h1.game-title {
+				font-family: 'Jersey 10';
+				color: #fff;
+				text-shadow: 2px 4px #172B32;
+				font-size: 3em;
+			}
+			
+			.shine {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+				width: 100%;
+				z-index: 6;
+				background: linear-gradient(65deg, rgba(2, 11, 13, 0.4) 0%, rgba(15, 40, 43, 0.12) 50%, rgba(195, 212, 163, 0.4) 100%);
+			}
+			.pond {
+				height: 100%;
+				width: 100%;
+				overflow: hidden;
+				position: relative;
+				background: url('https://susanpallmann.github.io/sudoku-pond/images/caustics.gif');
+				background-repeat: repeat;
+			}
+
+			.shadow-layers {
+				height: 100%;
+				width: 100%;
+				position: absolute;
+				filter: drop-shadow(0px calc(var(--base-size)*16px) 0px rgba(1, 24, 37, 0.42));
+				z-index: 2;
+			}
+			
+			.pond:after {
+				content: "";
+				position: absolute;
+				height: 100%;
+				width: 100%;
+				top: 0;
+				left: 0;
+				background-color: #00576b;
+				z-index: 6;
+				opacity: 0.0;
+			}
+			.lily-layer {
+				z-index: 9;
+				position: absolute;
+				height: 100%;
+				width: 100%;
+				
+			}
+			.lily-layer svg:nth-child(2n) {
+				transform: scaleX(-1);
+			}
+			.lily-layer svg:nth-child(3n+1) {
+				animation-delay: -600ms;
+			}
+			.lily-layer svg:nth-child(3n+2) {
+				animation-delay: -1200ms;
+			}
+			.lily-layer svg {
+				filter: drop-shadow(0px 8px 0px rgba(0, 87, 107, 0.55));
+				animation: lily-float 2s ease-in-out infinite alternate;
+			}
+			@keyframes lily-float {
+				0% {transform: translateX(10%);}
+				100% {transform: translateX(-10%);}
+			}
+			.lily-1 {
+				height: calc(var(--base-size)*16px);
+				width: calc(var(--base-size)*30px);
+			}
+			.lily-2 {
+				height: calc(var(--base-size)*20px);
+				width: calc(var(--base-size)*34px);
+			}
+			.lily-3 {
+				height: calc(var(--base-size)*14px);
+				width: calc(var(--base-size)*18px);
+			}
+			.fish-layer {
+				z-index: 5;
+				position: absolute;
+				height: 100%;
+				width: 100%;
+				top: 0;
+				left: 0;
+				/*filter: url(#wavy);*/
+			}
+			body:after {
+				content: "";
+				height: 100%;
+				width: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				opacity: 1;
+				z-index: 6;
+			}
+			
+			@keyframes fin-left {
+				0%   {transform: rotate(0deg);}
+				25%  {transform: rotate(10deg);}
+				75%  {transform: rotate(-10deg);}
+				100% {transform: rotate(0deg);}
+			}
+			
+			@keyframes fin-right {
+				0%   {transform: rotate(0deg);}
+				25%  {transform: rotate(-10deg);}
+				75%  {transform: rotate(10deg);}
+				100% {transform: rotate(0deg);}
+			}
+			
+			@keyframes swim {
+				0%   {transform: rotate(0deg);}
+				25%  {transform: rotate(-10deg);}
+				75%  {transform: rotate(10deg);}
+				100% {transform: rotate(0deg);}
+			}
+			
+			@keyframes swim-head {
+				0%   {transform: rotate(0deg);}
+				25%  {transform: rotate(10deg);}
+				75%  {transform: rotate(-10deg);}
+				100% {transform: rotate(0deg);}
+			}
+			
+			.fish-wrapper {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				width: calc(var(--base-size)*40px);
+				position: absolute;
+				transform-origin: 50% calc(var(--base-size)*4px);
+				filter: drop-shadow(0px calc(var(--base-size)*4px) 0px rgba(0, 87, 107, 0.55));
+			}
+			
+			.fish {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				width: calc(var(--base-size)*40px);
+				position: absolute;
+				transform-origin: 50% calc(var(--base-size)*4px);
+			}
+			
+			.fish-ripple-1 {
+				opacity: 0;
+				transition: opacity 0.1s;
+				height: calc(var(--base-size)*28px);
+				width: calc(var(--base-size)*28px);
+				position: absolute;
+				top: calc(var(--base-size)*-6px);
+				z-index: 7;
+			}
+			.fish-ripple-2 {
+				opacity: 0;
+				transition: opacity 0.1s;
+				height: calc(var(--base-size)*36px);
+				width: calc(var(--base-size)*36px);
+				position: absolute;
+				top: calc(var(--base-size)*-8px);
+				z-index: 7;
+			}
+			.fish-ripple-3 {
+				opacity: 0;
+				transition: opacity 0.1s;
+				height: calc(var(--base-size)*36px);
+				width: calc(var(--base-size)*36px);
+				position: absolute;
+				top: calc(var(--base-size)*-10px);
+				z-index: 7;
+			}
+			/*
+			.fish .full-body {
+				transform-origin: 50% 0px;
+				animation: swim-head 3000ms linear infinite;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				width: calc(var(--base-size)*40px);
+			}
+			
+			.fish .head {
+				display: flex;
+				flex-direction: column;
+				width: calc(var(--base-size)*18px);
+				z-index: 5;
+			}
+			
+			.fish .head svg {
+				height: calc(var(--base-size)*18px);
+				width: calc(var(--base-size)*18px);
+				margin-bottom: calc(var(--base-size)*-4px);
+				z-index: 5;
+			}
+			
+			.fish .torso-1 {
+				display: flex;
+				flex-direction: column;
+				transform-origin: 50% calc(var(--base-size)*4px);
+				animation: swim 3000ms linear infinite;
+				z-index: 4;
+			}
+			
+			.fish .torso-1 svg {
+				height: calc(var(--base-size)*20px);
+				width: calc(var(--base-size)*18px);
+				margin-bottom: calc(var(--base-size)*-6px);
+				z-index: 4;
+			}
+			
+			.fish .torso-2 {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				transform-origin: 50% calc(var(--base-size)*4px);
+				animation: swim 3000ms linear infinite;
+				z-index: 5;
+			}
+			
+			.fish .torso-2 svg {
+				height: calc(var(--base-size)*24px);
+				width: calc(var(--base-size)*18px);
+				margin-bottom: calc(var(--base-size)*-6px);
+				z-index: 5;
+			}
+			
+			.fish .tail {
+				transform-origin: 50% calc(var(--base-size)*4px);
+				animation: swim 3000ms linear infinite;
+				z-index: 2;
+			}
+			
+			.fish .tail svg {
+				height: calc(var(--base-size)*30px);
+				width: calc(var(--base-size)*14px);
+				z-index: 2;
+			}
+			
+			.fish .fins {
+				display: flex;
+				flex-direction: row;
+				width: 100%;
+				justify-content: space-between;
+				position: absolute;
+				top: calc(var(--base-size)*21px);
+			}
+			
+			.fish .fins .left-fin {
+				height: calc(var(--base-size)*14px);
+				width: calc(var(--base-size)*12px);
+				animation: fin-left 2000ms linear infinite;
+				transform-origin: 100% 0;
+			}
+			
+			.fish .fins .right-fin {
+				height: calc(var(--base-size)*14px);
+				width: calc(var(--base-size)*12px);
+				animation: fin-right 2000ms linear infinite;
+				transform-origin: 0 0;
+			}*/
+			
+			.pond .fish-wrapper:nth-child(8n - 7) .full-body,
+			.pond .fish-wrapper:nth-child(8n - 7) .torso-1,
+			.pond .fish-wrapper:nth-child(8n - 7) .torso-2,
+			.pond .fish-wrapper:nth-child(8n - 7) .tail,
+			.pond .fish-wrapper:nth-child(8n - 7) .fins .left-fin,
+			.pond .fish-wrapper:nth-child(8n - 7) .fins .right-fin {
+				animation-delay: -100ms !important;
+			}
+			
+			.pond .fish-wrapper:nth-child(8n - 6) .full-body,
+			.pond .fish-wrapper:nth-child(8n - 6) .torso-1,
+			.pond .fish-wrapper:nth-child(8n - 6) .torso-2,
+			.pond .fish-wrapper:nth-child(8n - 6) .tail,
+			.pond .fish-wrapper:nth-child(8n - 6) .fins .left-fin,
+			.pond .fish-wrapper:nth-child(8n - 6) .fins .right-fin {
+				animation-delay: -200ms !important;
+			}
+			
+			.pond .fish-wrapper:nth-child(8n - 5) .full-body,
+			.pond .fish-wrapper:nth-child(8n - 5) .torso-1,
+			.pond .fish-wrapper:nth-child(8n - 5) .torso-2,
+			.pond .fish-wrapper:nth-child(8n - 5) .tail,
+			.pond .fish-wrapper:nth-child(8n - 5) .fins .left-fin,
+			.pond .fish-wrapper:nth-child(8n - 5) .fins .right-fin {
+				animation-delay: -300ms !important;
+			}
+			
+			.pond .fish-wrapper:nth-child(8n - 4) .full-body,
+			.pond .fish-wrapper:nth-child(8n - 4) .torso-1,
+			.pond .fish-wrapper:nth-child(8n - 4) .torso-2,
+			.pond .fish-wrapper:nth-child(8n - 4) .tail,
+			.pond .fish-wrapper:nth-child(8n - 4) .fins .left-fin,
+			.pond .fish-wrapper:nth-child(8n - 4) .fins .right-fin {
+				animation-delay: -400ms !important;
+			}
+			
+			.pond .fish-wrapper:nth-child(8n - 3) .full-body,
+			.pond .fish-wrapper:nth-child(8n - 3) .torso-1,
+			.pond .fish-wrapper:nth-child(8n - 3) .torso-2,
+			.pond .fish-wrapper:nth-child(8n - 3) .tail,
+			.pond .fish-wrapper:nth-child(8n - 3) .fins .left-fin,
+			.pond .fish-wrapper:nth-child(8n - 3) .fins .right-fin {
+				animation-delay: -500ms !important;
+			}
+			
+			.pond .fish-wrapper:nth-child(8n - 2) .full-body,
+			.pond .fish-wrapper:nth-child(8n - 2) .torso-1,
+			.pond .fish-wrapper:nth-child(8n - 2) .torso-2,
+			.pond .fish-wrapper:nth-child(8n - 2) .tail,
+			.pond .fish-wrapper:nth-child(8n - 2) .fins .left-fin,
+			.pond .fish-wrapper:nth-child(8n - 2) .fins .right-fin {
+				animation-delay: -600ms !important;
+			}
+			:root {
+				--sprite-offset-left: 0px;
+				--sprite-offset-top: 0px;
+				--background-size-width: calc(2059px / 4 * var(--base-size));
+				--background-size-height: calc(727px / 4 * var(--base-size));
+			}
+			.fish[fish-skin="1"] {
+				--sprite-offset-top: calc(0 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(0 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="2"] {
+				--sprite-offset-top: calc(0 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(1 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="3"] {
+				--sprite-offset-top: calc(0 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(2 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="4"] {
+				--sprite-offset-top: calc(0 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(3 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="5"] {
+				--sprite-offset-top: calc(0 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(4 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="6"] {
+				--sprite-offset-top: calc(0 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(5 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="7"] {
+				--sprite-offset-top: calc(0 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(6 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="8"] {
+				--sprite-offset-top: calc(0 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(7 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="9"] {
+				--sprite-offset-top: calc(0 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(8 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="10"] {
+				--sprite-offset-top: calc(0 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(9 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="11"] {
+				--sprite-offset-top: calc(0 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(10 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="12"] {
+				--sprite-offset-top: calc(0 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(11 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="13"] {
+				--sprite-offset-top: calc(1 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(0 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="14"] {
+				--sprite-offset-top: calc(1 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(1 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="15"] {
+				--sprite-offset-top: calc(1 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(2 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="16"] {
+				--sprite-offset-top: calc(1 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(3 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="17"] {
+				--sprite-offset-top: calc(1 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(4 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="18"] {
+				--sprite-offset-top: calc(1 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(5 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="19"] {
+				--sprite-offset-top: calc(1 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(6 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="20"] {
+				--sprite-offset-top: calc(1 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(7 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="21"] {
+				--sprite-offset-top: calc(1 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(8 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="22"] {
+				--sprite-offset-top: calc(1 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(9 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="23"] {
+				--sprite-offset-top: calc(1 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(10 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			.fish[fish-skin="24"] {
+				--sprite-offset-top: calc(1 * (363px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+				--sprite-offset-left: calc(11 * (170px / 4 * var(--base-size) + (1px / 4 * var(--base-size))));
+			}
+			/* New fish styles using spritesheet */
+			.fish {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				width: calc(var(--base-size)*40px);
+				height: calc(var(--base-size)*71.75px);
+				position: absolute;
+				transform-origin: 50% calc(var(--base-size)*4px);
+			}
+			.fish .full-body {
+				transform-origin: 50% 0px;
+				animation: swim-head 3000ms linear infinite;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				width: calc(var(--base-size)*40px);
+				height: calc(var(--base-size)*71.75px);
+			}
+			.fish .full-body .head {
+				display: flex;
+				flex-direction: column;
+				width: calc(var(--base-size)*18px);
+				height: calc(var(--base-size)*18px);
+				z-index: 5;
+				background-image: url('https://susanpallmann.github.io/sudoku-pond/images/fish-spritesheet.png');
+				background-position: calc((-49px/4*var(--base-size)) - var(--sprite-offset-left)) calc(0px - var(--sprite-offset-top));
+				background-size: var(--background-size-width) var(--background-size-height);
+				position: relative;
+			}
+			.fish .full-body .head .torso-1 {
+				display: flex;
+				flex-direction: column;
+				transform-origin: 50% calc(var(--base-size)*4px);
+				animation: swim 3000ms linear infinite;
+				z-index: 4;
+				height: calc(var(--base-size)*20px);
+				width: calc(var(--base-size)*18px);
+				background-image: url('https://susanpallmann.github.io/sudoku-pond/images/fish-spritesheet.png');
+				background-position: calc((-49px/4*var(--base-size)) - var(--sprite-offset-left)) calc((-73px/4*var(--base-size)) - var(--sprite-offset-top));
+				background-size: var(--background-size-width) var(--background-size-height);
+				position: absolute;
+				top: calc(100% - (8px/4*var(--base-size)));
+			}
+			.fish .full-body .head .torso-1 .torso-2 {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				transform-origin: 50% calc(var(--base-size)*4px);
+				animation: swim 3000ms linear infinite;
+				z-index: 5;
+				height: calc(var(--base-size)*24px);
+				width: calc(var(--base-size)*24px);
+				background-image: url('https://susanpallmann.github.io/sudoku-pond/images/fish-spritesheet.png');
+				background-position: calc((-37px/4*var(--base-size)) - var(--sprite-offset-left)) calc((-154px/4*var(--base-size)) - var(--sprite-offset-top));
+				background-size: var(--background-size-width) var(--background-size-height);
+				position: absolute;
+				top: calc(100% - (8px/2*var(--base-size)));
+				left: calc(-12px/4*var(--base-size));
+			}
+			.fish .full-body .head .torso-1 .torso-2 .tail {
+				transform-origin: 50% calc(var(--base-size)*4px);
+				animation: swim 3000ms linear infinite;
+				animation-delay: 0s;
+				z-index: 2;
+				height: calc(var(--base-size)*28px);
+				width: calc(var(--base-size)*14px);
+				background-image: url('https://susanpallmann.github.io/sudoku-pond/images/fish-spritesheet.png');
+				background-position: calc((-57px/4*var(--base-size)) - var(--sprite-offset-left)) calc((-251px/4*var(--base-size)) - var(--sprite-offset-top));
+				background-size: var(--background-size-width) var(--background-size-height);
+				position: absolute;
+				top: calc(100% - (8px/2*var(--base-size)));
+			}
+			.fish .full-body .fins {
+				display: flex;
+				flex-direction: row;
+				width: 100%;
+				justify-content: space-between;
+				position: absolute;
+				top: calc(var(--base-size)*21px);
+				width: calc(var(--base-size)*40px);
+				height: calc(var(--base-size)*14px);
+			}
+			.fish .fins [class$="-fin"] {
+				height: calc(var(--base-size)*14px);
+				width: calc(var(--base-size)*12px);
+			}
+			.fish .fins .left-fin {
+				animation: fin-left 2000ms linear infinite;
+				transform-origin: 100% 0;
+				animation-delay: 0s;
+				background-image: url('https://susanpallmann.github.io/sudoku-pond/images/fish-spritesheet.png');
+				background-position: calc((0px/4*var(--base-size)) - var(--sprite-offset-left)) calc((-92px/4*var(--base-size)) - var(--sprite-offset-top));
+				background-size: var(--background-size-width) var(--background-size-height);
+			}
+			.fish .fins .right-fin {
+				animation: fin-right 2000ms linear infinite;
+				animation-delay: 0s;
+				transform-origin: 0 0;
+				background-image: url('https://susanpallmann.github.io/sudoku-pond/images/fish-spritesheet.png');
+				background-position: var(--sprite-offset-left) var(--sprite-offset-top);
+				background-position: calc((-122px/4*var(--base-size)) - var(--sprite-offset-left)) calc((-92px/4*var(--base-size)) - var(--sprite-offset-top));
+				background-size: var(--background-size-width) var(--background-size-height);
+			}
+			.fish svg {
+				display: none !important;
+			}
+			
+			.game-overlay {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+				width: 100%;
+				z-index: 11;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				gap: 24px;
+			}
+			.board-wrapper {
+				height: calc(350px + 1.75em);
+				width: 350px;
+				background-color: rgba(1, 43, 61, 0.8);
+				border-radius: 8px;
+				box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4);
+				backdrop-filter: blur(7px);
+				padding: 12px;
+			}
+			
+			.board-wrapper .info {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+			}
+			
+			.board-wrapper .info p {
+				color: rgba(255, 255, 255, 0.75);
+				font-family: 'Nunito sans', Arial, sans-serif;
+				font-size: 1em;
+				font-weight: 600;
+				margin: 0;
+				margin-bottom: 0.5em;
+			}
+			
+			.button-wrapper {
+				background-color: rgba(1, 43, 61, 0.8);
+				border-radius: 8px;
+				box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4);
+				backdrop-filter: blur(7px);
+				padding: 12px;
+			}
+			.navigation-bar {
+				background-color: rgba(1, 43, 61, 0.8);
+				box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4);
+				backdrop-filter: blur(7px);
+				padding: 8px;
+				display: flex;
+				flex-direction: row;
+				z-index: 15;
+				position: absolute;
+				top: 0;
+				width: 100%;
+			}
+			.number-buttons {
+				display: flex;
+				flex-direction: row;
+				gap: 8px;
+			}
+			.number-button {
+				display: flex;
+				width: 100%;
+				background-color: rgba(0, 0, 0, 0.12);
+				color: #fff;
+				font-family: 'Nunito sans', Arial, sans-serif;
+				padding: 8px;
+				border-radius: 8px;
+				font-size: 1.5em;
+				cursor: pointer;
+			}
+			.control-buttons {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				margin-bottom: 8px;
+			}
+			.control-button, .back-button {
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+				width: fit-content;
+				background-color: rgba(0, 0, 0, 0.12);
+				color: #fff;
+				font-family: 'Nunito sans', Arial, sans-serif;
+				padding: 8px;
+				border-radius: 8px;
+				font-size: 0.8em;
+				font-weight: 700;
+				cursor: pointer;
+			}
+			#back {
+				flex-direction: row;
+				align-items: center;
+				justify-content: center;
+				gap: 4px;
+			}
+			.control-button p, .back-button p {
+				margin: 0;
+			}
+			.icon {
+				fill: #fff;
+				height: 20px;
+				width: 20px;
+				display: inline-block;
+			}
+			.control-button[mode="enabled"] .icon#icon-note-enable {
+				display: none;
+			}
+			.control-button[mode="enabled"] .icon#icon-note-disable {
+				display: inline-block;
+			}
+			.control-button[mode="disabled"] .icon#icon-note-enable {
+				display: inline-block;
+			}
+			.control-button[mode="disabled"] .icon#icon-note-disable {
+				display: none;
+			}
+			
+			.sudoku-grid {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				height: calc(100% - 1.75em);
+				width: 100%;
+				box-sizing: border-box;
+				gap: -1px;
+				align-items: center;
+				justify-content: center;
+			}
+			.square {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+				box-sizing: border-box;
+				border: 1px solid #34B9B9;
+				width: calc(100/3*1%);
+				height: calc(100/3*1%);
+				box-sizing: border-box;
+				margin-right: -1px;
+			}
+			.square:nth-child(1), .square:nth-child(2), .square:nth-child(3), 
+			.square:nth-child(4), .square:nth-child(5), .square:nth-child(6) {
+				border-bottom: none;
+			}
+			.cell {
+				border: 1px solid #247C94;
+				width: calc(100/3*1%);
+				height: calc(100/3*1%);
+				box-sizing: border-box;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			
+			.cell[select="false"][highlight="none"] {
+				background-color: none;
+			}
+			
+			.cell[select="false"][highlight="level-1"] {
+				background-color: #03394C;
+			}
+			.cell[select="false"][highlight="level-2"] {
+				background-color: #04465E;
+			}
+			
+			.cell[select="true"] {
+				background-color: #015163;
+			}
+			.cell p {
+				font-family: 'Nunito Sans', arial, sans-serif;
+				font-size: 24px;
+				margin: 0;
+			}
+			.cell[error="false"] p {
+				color: rgba(255, 255, 255, 0.75);
+			}
+			.cell[error="false"] .notes p.note[status="active"] {
+				color: rgba(255, 255, 255, 0.75);
+			}
+			.cell[error="false"] .notes p.note[status="inactive"] {
+				color: rgba(255, 255, 255, 0);
+			}
+			.cell[error="false"] .notes p.note[bolded="true"] {
+				font-weight: 700;
+			}
+			.cell[error="false"] .notes p.note[bolded="false"] {
+				font-weight: 500;
+			}
+			
+			.cell[error="false"][type="auto"] p {
+				color: rgba(255, 255, 255, 0.75);
+			}
+			.cell[error="false"][type="user"] p {
+				color: #74FFC8;
+			}
+			.cell[error="true"][type="auto"] p {
+				color: #D25050;
+			}
+			.cell[error="true"][type="user"] p {
+				color: #FFC79F;
+			}
+			.notes {
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+			}
+			.cell p.note {
+				font-size: 0.5em;
+				margin: 0;
+				height: 33%;
+				width: 33%;
+				text-align: center;
+			}
+		</style>
+		<script>
+		
+			function rollRandom(min, max) {
+				return Math.floor(Math.random()*(max - min) + min);
+			}
+			
+			function angle(cx, cy, ex, ey) {
+				var dy = ey - cy;
+				var dx = ex - cx;
+				var theta = Math.atan2(dy, dx); // range (-PI, PI]
+				theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
+				theta = theta + 90;
+				if (theta < 0) theta = 360 + theta; // range [0, 360)
+				return theta;
+			}
+		
+			class Pond {
+				constructor(element) {
+					this.element = $(element);
+					this.bounds = {
+						minX: this.element.offset().left,
+						maxX: this.element.offset().left + parseInt(this.element.css('width')),
+						minY: this.element.offset().top,
+						maxY: this.element.offset().top + parseInt(this.element.css('height'))
+					};
+					this.timeout;
+					this.fish = [];
+					//this.createCaustics();
+					//this.createLilies();
+					this.createFish();
+				}
+				
+				inBounds(x, y) {
+					return x >= this.minX && x <= this.maxX && 7 >= this.minY && y <= this.maxY;
+				}
+				
+				createFish() {
+					const numFish = 24;
+					for (let i = 0; i < numFish; i++) {
+						this.fish.push(new Fish(this));
+					}
+					this.startSim();
+				}
+				
+				startSim() {
+					let objectReference = this;
+					this.timeout = setInterval(function () {
+						objectReference.step();
+					}, 16.66);
+				}
+				
+				step() {
+					for (let i = 0; i < this.fish.length; i++) {
+						this.fish[i].step();
+					}
+					let game = getGame();
+					if (game !== undefined) {
+						game.updateTime();
+					}
+				}
+				
+				createLilies() {
+					let numLilies;
+					if ((this.bounds.maxX - this.bounds.minX) < 650) {
+						numLilies = 9;
+					} else if ((this.bounds.maxX - this.bounds.minX) < 900) {
+						numLilies = 14;
+					} else {
+						numLilies = 20;
+					}
+					const lilyElements = [
+						$(`
+							<svg class="lily-1" viewBox="0 0 120 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M88 64H32V56H16V48H8V40H0V24H8V16H24V8H40V0H88V8H96V16H112V24H120V40H112V48H96V56H88V64Z" fill="#48691C"/>
+								<path d="M88 8H96V16H112V24H120V32H112V40H96V48H88V56H32V48H16V40H8V32H0V24H8V16H24V8H40V0H88V8Z" fill="#9FBC35"/>
+								<rect x="32" y="16" width="32" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="64" y="24" width="8" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="48" y="24" width="8" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="40" y="32" width="8" height="16" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="32" y="48" width="8" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="16" y="24" width="16" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="8" y="32" width="8" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="72" y="32" width="16" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="88" y="40" width="8" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="64" y="8" width="16" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="80" width="8" height="8" fill="#48691C" fill-opacity="0.33"/>
+							</svg>`
+						),
+						$(`
+							<svg class="lily-2" viewBox="0 0 136 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M96 80H32V72H16V64H8V56H0V48H16V40H48V32H0V24H8V16H24V8H48V0H96V8H104V16H120V24H128V32H136V48H128V56H120V64H112V72H96V80Z" fill="#48691C"/>
+								<path d="M96 8H104V16H120V24H128V32H136V40H128V48H120V56H112V64H96V72H32V64H16V56H8V48H16V40H48V24H8V16H24V8H48V0H96V8Z" fill="#9FBC35"/>
+								<rect x="48" y="32" width="32" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="80" y="40" width="8" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="64" y="40" width="8" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="56" y="48" width="8" height="16" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="48" y="64" width="8" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="56" y="24" width="8" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="40" y="16" width="16" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="24" y="8" width="16" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="88" y="48" width="16" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="104" y="56" width="8" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="80" y="24" width="16" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="96" y="16" width="24" height="8" fill="#48691C" fill-opacity="0.33"/>
+							</svg>
+						`),
+						$(`
+							<svg class="lily-3" viewBox="0 0 72 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M48 48H16V40H8V32H0V16H8V8H24V0H56V8H64V16H72V32H56V40H48V48Z" fill="#48691C"/>
+								<path d="M56 8H64V16H72V24H56V32H48V40H16V32H8V24H0V16H8V8H24V0H56V8Z" fill="#9FBC35"/>
+								<rect x="40" y="16" width="16" height="8" fill="#48691C" fill-opacity="0.33"/>
+								<rect x="8" y="8" width="32" height="8" fill="#48691C" fill-opacity="0.33"/>
+							</svg>
+						`)
+					];
+					for (let i = 0; i < numLilies; i++) {
+						let newLily = lilyElements[rollRandom(1, lilyElements.length+1) - 1].clone();
+						let yPos = rollRandom(this.bounds.minY, this.bounds.maxY);
+						let yQuarter = (this.bounds.maxY - this.bounds.minY)/4;
+						if (yPos > this.bounds.minY + yQuarter && yPos <= this.bounds.minY + 2*yQuarter) {
+							yPos = yPos - yQuarter;
+						} else if (yPos > this.bounds.minY + 2*yQuarter && yPos <= this.bounds.maxY - yQuarter) {
+							yPos = yPos + yQuarter;
+						}
+						let xPos = rollRandom(this.bounds.minX, this.bounds.maxX);
+						let xQuarter = (this.bounds.maxX - this.bounds.minX)/4;
+						if (xPos > this.bounds.minX + xQuarter && xPos <= this.bounds.minX + 2*xQuarter) {
+							xPos = xPos - xQuarter*0.9;
+						} else if (xPos > this.bounds.minX + 2*xQuarter && xPos <= this.bounds.maxX - xQuarter) {
+							xPos = xPos + xQuarter*0.9;
+						}
+						
+						newLily.css({'position': 'absolute', 'top': yPos, 'left': xPos});
+						this.element.find('.lily-layer').append(newLily);
+					}
+				}
+			}
+			
+			class Fish {
+				constructor(pond) {
+					this.pond = pond;
+					this.interval;
+					this.element = $(`
+						<div class="fish-wrapper">
+							<div class="fish" fish-skin="${rollRandom(1, 24)}">
+								
+								<div class="full-body">
+									<div class="head">
+										<div class="torso-1">
+											<div class="torso-2">
+												<div class="tail">
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="fins">
+										<div class="left-fin"></div>
+										<div class="right-fin"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					`);
+					this.destination = null;
+					this.top = 0;
+					this.left = 0;
+					this.rotation = 0;
+					this.speed = 1;
+					this.pond.element.find('.fish-layer').append(this.element);
+				}
+				
+				setDestination() {
+					let destinationX = rollRandom(this.pond.bounds.minX, this.pond.bounds.maxX+64);
+					let destinationY = rollRandom(this.pond.bounds.minY, this.pond.bounds.maxY+64);
+					this.destination = {x: destinationX-32, y: destinationY-32};
+				}
+				
+				move(left, top, rotation) {
+					this.left = left;
+					this.top = top;
+					this.rotation = rotation;
+					this.element.css({'left': this.left + 'px', 'top': this.top + 'px'});
+					this.element.children('.fish').css({'transform': 'rotate(' + this.rotation + 'deg)'});
+				}
+				
+				blur() {
+					const waitTime = 150;
+					const part = rollRandom(1, 4);
+					let element;
+					if (part === 1) {
+						element = this.element.find('.head').children('svg');
+					} else if (part === 2) {
+						element = this.element.find('.torso-1').children('svg');
+					} else if (part === 3) {
+						element = this.element.find('.torso-2').children('svg');
+					} else {
+						element = this.element.find('.tail').children('svg');
+					}
+					element.queue(function (next) {
+						$(this).css('filter', 'blur(1px)'); 
+						next();
+					}).delay(waitTime).queue(function (next) {
+						$(this).css('filter', 'none'); 
+						next();
+					});
+				}
+				
+				ripple() {
+					const waitTime = 150;
+					
+					this.element.find('.fish-ripple-1').queue(function (next) { 
+						$(this).css('opacity', 0.5); 
+						next();
+					}).delay(waitTime).queue(function (next) {
+						$(this).css('opacity', 0); 
+						next();
+					});
+					this.element.find('.fish-ripple-2').delay(waitTime).queue(function (next) { 
+						$(this).css('opacity', 0.5); 
+						next();
+					}).delay(waitTime).queue(function (next) {
+						$(this).css('opacity', 0); 
+						next();
+					});
+					this.element.find('.fish-ripple-3').delay(waitTime*2).queue(function (next) { 
+						$(this).css('opacity', 0.5); 
+						next();
+					}).delay(waitTime).queue(function (next) {
+						$(this).css('opacity', 0); 
+						next();
+					});
+					
+				}
+				
+				step() {
+					let stepDistance = this.speed;
+					const stepRotation = 1;
+					const changeSpeed = rollRandom(1, 1000) < 5 ? true : false;
+					const ripple = rollRandom(1, 1000) < 3 ? true : false;
+					if (changeSpeed) {
+						stepDistance = rollRandom(1, 3)/2;
+						this.speed = stepDistance;
+					}
+					if (this.destination === null) {
+						this.setDestination();
+					}
+					if (ripple) {
+						this.ripple();
+					}
+					let newLeft;
+					let newTop;
+					let xModifier = 1;
+					let yModifier = 1;
+					let newRotation;
+					let turnDirection = 1;
+					const targetAngle = angle(this.left, this.top, this.destination.x, this.destination.y);
+					
+					if (Math.abs(this.destination.x - this.left) >= Math.abs(this.destination.y - this.top)) {
+						yModifier = Math.abs(this.destination.y - this.top)/Math.abs(this.destination.x - this.left);
+					} else {
+						xModifier = Math.abs(this.destination.x - this.left)/Math.abs(this.destination.y - this.top);
+					}
+					
+					if (targetAngle - this.rotation > 0) {
+						
+						if (targetAngle - this.rotation < 180) {
+						
+						} else {
+							turnDirection = -1;
+						}
+					} else if (targetAngle - this.rotation <= 0) {
+						if (this.rotation - targetAngle < 180) {
+							turnDirection = -1;
+						} else {
+						}
+					}
+					
+					
+					if (Math.abs(targetAngle - this.rotation) <= stepRotation || Math.abs(this.rotation - targetAngle) <= stepRotation) {
+						newRotation = targetAngle;
+					} else {
+						newRotation = this.rotation + (stepRotation*turnDirection);
+					}
+					if (newRotation >= 360) {
+						newRotation = newRotation - 360;
+					} else if (newRotation < 0) {
+						newRotation = newRotation + 360;
+					}
+					
+					if (Math.abs(this.destination.x - this.left) <= stepDistance) {
+						newLeft = this.destination.x;
+					} else if (this.left <= this.destination.x) {
+						newLeft = (this.left + stepDistance*xModifier);
+					} else {
+						newLeft = (this.left - stepDistance*xModifier);
+					}
+					
+					if (Math.abs(this.destination.y - this.top) <= stepDistance) {
+						newTop = this.destination.y;
+					} else if (this.top <= this.destination.y) {
+						newTop = (this.top + stepDistance*yModifier);
+					} else {
+						newTop = (this.top - stepDistance*yModifier);
+					}
+					
+					newRotation = parseInt(newRotation);
+					this.move(newLeft, newTop, newRotation);
+					
+					if (this.left === this.destination.x && this.top === this.destination.y) {
+						this.destination = null;
+					}
+				}
+			}
+
+			class Cell {
+				constructor(puzzle, value, id) {
+					this.puzzle = puzzle;
+					this.id = id;
+					this.row = (Math.floor((id-1) / 9)) + 1;
+					this.column = ((id-1) % 9) + 1;
+					this.square = (((Math.floor((this.row-1)/3)))*3) + (Math.floor((this.column-1) / 3)+1);
+					this.element = $(`<div class="cell" id="cell-0${id}"></div>`);
+					this.type = value === 0 ? 'user' : 'auto';
+					this.value = value;
+					this.noteValues = []; 
+					this.selected = 'false'; 
+					this.highlight = 'none';
+					this.error = 'false';
+					this.boldNote;
+				}
+				
+				initialize() {
+					this.updateDisplay();
+					this.bindClickEvents();
+				}
+				
+				highlightCell(level = null) {
+					if (level === null) {
+						this.highlight = "none";
+					} else {
+						this.highlight = level;
+					}
+					this.updateDisplay();
+				}
+				
+				updateDisplay() {
+					this.element.empty();
+					if (this.value !== 0) {
+						this.element.append($(`<p>${this.value}</p>`));
+					} else {
+						this.element.append($(`<div class="notes"></div>`));
+						for (let i = 1; i <= 9; i++) {
+							let attribute = this.noteValues.includes(i) ? 'active' : 'inactive';
+							let bolded = this.boldNote === i ? 'true' : 'false';
+							this.element.children('.notes').append($(`<p class="note" bold="${bolded}" status="${attribute}">${i}</p>`));
+						}
+					}
+					this.element.attr('select', this.selected);
+					this.element.attr('highlight', this.highlight);
+					this.element.attr('type', this.type);
+					this.element.attr('error', this.error);
+				}
+				
+				select() {
+					for (let i = 0; i < this.puzzle.cells.length; i++) {
+						this.puzzle.cells[i].deselect();
+						let level = null;
+						if (this.puzzle.cells[i].row === this.row || this.puzzle.cells[i].column === this.column || this.puzzle.cells[i].square === this.square) {
+							level = 'level-1';
+						}
+						if (this.puzzle.cells[i].value !== 0 && this.puzzle.cells[i].value === this.value) {
+							level = 'level-2';
+						}
+						this.puzzle.cells[i].highlightCell(level);
+					}
+					this.selected = 'true';
+					this.updateDisplay();
+				}
+				
+				deselect() {
+					this.selected = 'false';
+					this.highlightCell();
+					this.updateDisplay();
+				}
+				
+				playerFill(value) {
+					if (this.type === 'user' && this.selected === 'true') {
+						if (this.value === value) {
+							this.empty();
+						} else {
+							let validPlacements = this.puzzle.getPlacements(this.puzzle.grid, this.id-1);
+							if (validPlacements.includes(value)) {
+								this.error = 'false';
+							} else {
+								this.error = 'true';
+							}
+							let previousValue = this.value;
+							this.value = value;
+							this.noteValues = [];
+							this.puzzle.notesGrid[this.id - 1] = [];
+							this.puzzle.grid[this.id - 1] === value;
+							this.puzzle.playerGrid[this.id - 1] === value;
+							if (this.puzzle.undoFlag) {
+								this.puzzle.undoFlag = false;
+							} else {
+								this.puzzle.saveMove(this.id - 1, 'fill', previousValue, value);
+							}
+							this.select();
+							this.updateDisplay();
+						}
+					}
+				}
+				
+				note(value) {
+					if (this.type === 'user' && this.selected === 'true') {
+						if (this.value === 0) {
+							let validPlacements = this.puzzle.getPlacements(this.puzzle.grid, this.id-1);
+							if (validPlacements.includes(value)) {
+								if (this.noteValues.includes(value)) {
+									this.removeNote(value);
+								} else {
+									this.noteValues.push(value);
+									this.puzzle.notesGrid[this.id - 1].push(value);
+									if (this.puzzle.undoFlag) {
+										this.puzzle.undoFlag = false;
+									} else {
+										this.puzzle.saveMove(this.id - 1, 'note', 0, value);
+									}
+									this.select();
+									this.updateDisplay();
+								}
+							}
+						}
+					}
+				}
+				
+				removeNote(value) {
+					if (this.type === 'user') {
+						if (this.noteValues.includes(value)) {
+							console.log(this.noteValues.indexOf(value));
+							this.noteValues.splice(this.noteValues.indexOf(value), 1);
+							this.puzzle.notesGrid[this.id - 1].splice(this.puzzle.notesGrid[this.id - 1].indexOf(value), 1);
+							if (this.puzzle.undoFlag) {
+								this.puzzle.undoFlag = false;
+							} else {
+								this.puzzle.saveMove(this.id - 1, 'note', value, 0);
+							}
+						}
+					}
+					this.updateDisplay();
+				}
+				
+				setSolution(value) {
+					this.correctValue = value;
+				}
+				
+				fill(value) {
+					this.value = value;
+					this.puzzle.grid[this.id - 1] === value;
+					this.select();
+					this.updateDisplay();
+				}
+				
+				empty() {
+					let previousValue = this.value;
+					this.value = 0;
+					this.puzzle.grid[this.id - 1] === 0;
+					this.puzzle.playerGrid[this.id - 1] === 0;
+					if (this.puzzle.undoFlag) {
+						this.puzzle.undoFlag = false;
+					} else {
+						this.puzzle.saveMove(this.id - 1, 'fill', previousValue, 0);
+					}
+					this.updateDisplay();
+				}
+				
+				bindClickEvents() {
+					this.element.on('click', function() {
+						const id = parseInt($(this).attr('id').slice(-2));
+						const game = getGame();
+						game.cells[id - 1].select();
+					});
+				}
+			}
+
+
+			class Puzzle {
+				constructor(element, difficulty) {
+					this.element = element;
+					this.grid;
+					
+					this.autoGrid;
+					this.playerGrid = this.getPlayerGrid();
+					this.notesGrid = this.getNoteGrid();
+					
+					this.moves = [];
+					this.undoFlag = false;
+					
+					this.difficulty = difficulty;
+					this.cells = [];
+					this.startTime;
+					this.createGrid(difficulty);
+					this.create(this.grid);
+				}
+				
+				createGrid(difficulty) {
+					this.grid = this.getBaseGrid();
+					this.shuffleGrid();
+					const difficulties = { easy: 36, medium: 54, hard: 70 };
+					console.log(this.grid.toString());
+					this.removeValues(difficulties[difficulty] || 54);
+				}
+				
+				loadFromGrid() {
+					// Do some stuff for loading
+				}
+				
+				getBaseGrid() {
+					return [
+						1, 2, 3, 4, 5, 6, 7, 8, 9,
+						4, 5, 6, 7, 8, 9, 1, 2, 3,
+						7, 8, 9, 1, 2, 3, 4, 5, 6,
+						2, 3, 1, 5, 6, 4, 8, 9, 7,
+						5, 6, 4, 8, 9, 7, 2, 3, 1,
+						8, 9, 7, 2, 3, 1, 5, 6, 4,
+						3, 1, 2, 6, 4, 5, 9, 7, 8,
+						6, 4, 5, 9, 7, 8, 3, 1, 2,
+						9, 7, 8, 3, 1, 2, 6, 4, 5
+					];
+				}
+				
+				getPlayerGrid() {
+					return [
+						0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0, 0
+					];
+				}
+				
+				getNoteGrid() {
+					return [
+						[], [], [], [], [], [], [], [], [],
+						[], [], [], [], [], [], [], [], [],
+						[], [], [], [], [], [], [], [], [],
+						[], [], [], [], [], [], [], [], [],
+						[], [], [], [], [], [], [], [], [],
+						[], [], [], [], [], [], [], [], [],
+						[], [], [], [], [], [], [], [], [],
+						[], [], [], [], [], [], [], [], [],
+						[], [], [], [], [], [], [], [], []
+					];
+				}
+				
+				shuffleGrid() {
+					const swapContainers = (type, first, second) => {
+						for (let i = 0; i < 9; i++) {
+							let firstId = type === 'row' ? (first*9 + i) : (i*9 + first);
+							let secondId = type === 'row' ? (second*9 + i) : (i*9 + second);
+							let value = this.grid[firstId];
+							this.grid[firstId] = this.grid[secondId];
+							this.grid[secondId] = value;
+						}
+					}
+					
+					for(let group = 0; group < 3; group++) {
+						for(let i = 0; i < 3; i++) {
+							if (Math.random() > 0.5) {
+								swapContainers('row', group * 3 + i, group * 3 + (i + 1) % 3);
+							}
+							if (Math.random() > 0.5) {
+								swapContainers('column', group * 3 + i, group * 3 + (i + 1) % 3);
+							}
+						}
+					}
+					let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9].sort(() => Math.random() - 0.5);
+					this.grid = this.grid.map(val => numbers[val - 1]);
+				}
+				
+				getPlacements(grid, cell) {
+					let placements = [];
+					let row = Math.floor(cell / 9);
+					let column = cell % 9;
+					let startRow = Math.floor(row / 3) * 3;
+					let startCol = Math.floor(column / 3) * 3;
+
+					for (let i = 1; i <= 9; i++) {
+						let foundConflict = false;
+						for(let j = 0; j < 9; j++) {
+							if (grid[row * 9 + j] === i) {
+								foundConflict = true;
+								break;
+							}
+							if (grid[j * 9 + column] === i) {
+								foundConflict = true;
+								break;
+							}
+							
+							let rowNumber = startRow + Math.floor(j / 3);
+							let columnNumber = startCol + (j % 3);
+							if (grid[rowNumber * 9 + columnNumber] === i) {
+								foundConflict = true;
+								break;
+							}
+						}
+						if (!foundConflict) {
+							placements.push(i);
+						}
+					}
+					return placements;
+				}
+				
+				ruleOutViaCrossData(placements, cell, value) {
+					let row = Math.floor(cell / 9);
+					let column = cell % 9;
+					let startRow = Math.floor(row / 3) * 3;
+					let startColumn = Math.floor(column / 3) * 3;
+					
+					let rowRelatedSquare1 = startRow + 3 > 8 ? startRow + 3 - 9 : startRow + 3;
+					let rowRelatedSquare2 = startRow + 6 > 8 ? startRow + 6 - 9 : startRow + 6;
+					let otherColumn1 = column + 1 > startColumn + 2 ? column + 1 - 3 : column + 1;
+					let otherColumn2 = column + 2 > startColumn + 2 ? column + 2 - 3 : column + 2;
+					let columnRelatedSquare1 = startColumn + 3 > 8 ? startColumn + 3 - 9 : startColumn + 3;
+					let columnRelatedSquare2 = startColumn + 6 > 8 ? startColumn + 6 - 9 : startColumn + 6;
+					let otherRow1 = column + 1 > startColumn + 2 ? column + 1 - 3 : column + 1;
+					let otherRow2 = column + 2 > startColumn + 2 ? column + 2 - 3 : column + 2;
+					
+					if (((placements[(rowRelatedSquare1 + 0)*9 + column].includes(value) ||
+						  placements[(rowRelatedSquare1 + 1)*9 + column].includes(value) ||
+						  placements[(rowRelatedSquare1 + 2)*9 + column].includes(value)) && 
+						 !placements[(rowRelatedSquare1 + 0)*9 + otherColumn1].includes(value) &&
+						 !placements[(rowRelatedSquare1 + 1)*9 + otherColumn1].includes(value) &&
+						 !placements[(rowRelatedSquare1 + 2)*9 + otherColumn1].includes(value) &&
+						 !placements[(rowRelatedSquare1 + 0)*9 + otherColumn2].includes(value) &&
+						 !placements[(rowRelatedSquare1 + 1)*9 + otherColumn2].includes(value) &&
+						 !placements[(rowRelatedSquare1 + 2)*9 + otherColumn2].includes(value)) || 
+						((placements[(rowRelatedSquare2 + 0)*9 + column].includes(value) ||
+						  placements[(rowRelatedSquare2 + 1)*9 + column].includes(value) ||
+						  placements[(rowRelatedSquare2 + 2)*9 + column].includes(value)) &&
+						 !placements[(rowRelatedSquare2 + 0)*9 + otherColumn1].includes(value) &&
+						 !placements[(rowRelatedSquare2 + 1)*9 + otherColumn1].includes(value) &&
+						 !placements[(rowRelatedSquare2 + 2)*9 + otherColumn1].includes(value) &&
+						 !placements[(rowRelatedSquare2 + 0)*9 + otherColumn2].includes(value) &&
+						 !placements[(rowRelatedSquare2 + 1)*9 + otherColumn2].includes(value) &&
+						 !placements[(rowRelatedSquare2 + 2)*9 + otherColumn2].includes(value))) {
+						return true;
+					} else if (((placements[row*9 + columnRelatedSquare1 + 0].includes(value) ||
+								 placements[row*9 + columnRelatedSquare1 + 1].includes(value) ||
+								 placements[row*9 + columnRelatedSquare1 + 2].includes(value)) && 
+								!placements[otherRow1*9 + columnRelatedSquare1 + 0].includes(value) &&
+								!placements[otherRow1*9 + columnRelatedSquare1 + 1].includes(value) &&
+								!placements[otherRow1*9 + columnRelatedSquare1 + 2].includes(value) &&
+								!placements[otherRow2*9 + columnRelatedSquare1 + 0].includes(value) &&
+								!placements[otherRow2*9 + columnRelatedSquare1 + 1].includes(value) &&
+								!placements[otherRow2*9 + columnRelatedSquare1 + 2].includes(value)) || 
+							   (((placements[row*9 + columnRelatedSquare2 + 0].includes(value) ||
+								 placements[row*9 + columnRelatedSquare2 + 1].includes(value) ||
+								 placements[row*9 + columnRelatedSquare2 + 2].includes(value)) && 
+								!placements[otherRow1*9 + columnRelatedSquare2 + 0].includes(value) &&
+								!placements[otherRow1*9 + columnRelatedSquare2 + 1].includes(value) &&
+								!placements[otherRow1*9 + columnRelatedSquare2 + 2].includes(value) &&
+								!placements[otherRow2*9 + columnRelatedSquare2 + 0].includes(value) &&
+								!placements[otherRow2*9 + columnRelatedSquare2 + 1].includes(value) &&
+								!placements[otherRow2*9 + columnRelatedSquare2 + 2].includes(value)))) {
+						return true;
+					} else if (((((placements[(rowRelatedSquare1 + 0)*9 + column].includes(value) ||
+								   placements[(rowRelatedSquare1 + 1)*9 + column].includes(value) ||
+								   placements[(rowRelatedSquare1 + 2)*9 + column].includes(value)) &&
+								  (placements[(rowRelatedSquare1 + 0)*9 + otherColumn1].includes(value) ||
+								   placements[(rowRelatedSquare1 + 1)*9 + otherColumn1].includes(value) ||
+								   placements[(rowRelatedSquare1 + 2)*9 + otherColumn1].includes(value)) &&
+								   (!placements[(rowRelatedSquare1 + 0)*9 + otherColumn2].includes(value) ||
+								   !placements[(rowRelatedSquare1 + 1)*9 + otherColumn2].includes(value) ||
+								   !placements[(rowRelatedSquare1 + 2)*9 + otherColumn2].includes(value)))) &&
+								   
+								(((placements[(rowRelatedSquare2 + 0)*9 + column].includes(value) ||
+								   placements[(rowRelatedSquare2 + 1)*9 + column].includes(value) ||
+								   placements[(rowRelatedSquare2 + 2)*9 + column].includes(value)) &&
+								  (placements[(rowRelatedSquare2 + 0)*9 + otherColumn1].includes(value) ||
+								   placements[(rowRelatedSquare2 + 1)*9 + otherColumn1].includes(value) ||
+								   placements[(rowRelatedSquare2 + 2)*9 + otherColumn1].includes(value)) &&
+								   (!placements[(rowRelatedSquare2 + 0)*9 + otherColumn2].includes(value) ||
+								   !placements[(rowRelatedSquare2 + 1)*9 + otherColumn2].includes(value) ||
+								   !placements[(rowRelatedSquare2 + 2)*9 + otherColumn2].includes(value))))) ||
+								   
+								((((placements[(rowRelatedSquare1 + 0)*9 + column].includes(value) ||
+								   placements[(rowRelatedSquare1 + 1)*9 + column].includes(value) ||
+								   placements[(rowRelatedSquare1 + 2)*9 + column].includes(value)) &&
+								  (placements[(rowRelatedSquare1 + 0)*9 + otherColumn2].includes(value) ||
+								   placements[(rowRelatedSquare1 + 1)*9 + otherColumn2].includes(value) ||
+								   placements[(rowRelatedSquare1 + 2)*9 + otherColumn2].includes(value)) &&
+								   (!placements[(rowRelatedSquare1 + 0)*9 + otherColumn1].includes(value) ||
+								   !placements[(rowRelatedSquare1 + 1)*9 + otherColumn1].includes(value) ||
+								   !placements[(rowRelatedSquare1 + 2)*9 + otherColumn1].includes(value)))) &&
+								   
+								(((placements[(rowRelatedSquare2 + 0)*9 + column].includes(value) ||
+								   placements[(rowRelatedSquare2 + 1)*9 + column].includes(value) ||
+								   placements[(rowRelatedSquare2 + 2)*9 + column].includes(value)) &&
+								  (placements[(rowRelatedSquare2 + 0)*9 + otherColumn2].includes(value) ||
+								   placements[(rowRelatedSquare2 + 1)*9 + otherColumn2].includes(value) ||
+								   placements[(rowRelatedSquare2 + 2)*9 + otherColumn2].includes(value)) &&
+								   (!placements[(rowRelatedSquare2 + 0)*9 + otherColumn1].includes(value) ||
+								   !placements[(rowRelatedSquare2 + 1)*9 + otherColumn1].includes(value) ||
+								   !placements[(rowRelatedSquare2 + 2)*9 + otherColumn1].includes(value)))))) {
+						return true;
+					} else if (((((placements[row*9 + columnRelatedSquare1 + 0].includes(value) ||
+								   placements[row*9 + columnRelatedSquare1 + 1].includes(value) ||
+								   placements[row*9 + columnRelatedSquare1 + 2].includes(value)) &&
+								  (placements[otherRow1*9 + columnRelatedSquare1 + 0].includes(value) ||
+								   placements[otherRow1*9 + columnRelatedSquare1 + 1].includes(value) ||
+								   placements[otherRow1*9 + columnRelatedSquare1 + 2].includes(value)) &&
+								 (!placements[otherRow2*9 + columnRelatedSquare1 + 0].includes(value) ||
+								  !placements[otherRow2*9 + columnRelatedSquare1 + 1].includes(value) ||
+								  !placements[otherRow2*9 + columnRelatedSquare1 + 2].includes(value)))) &&
+								(((placements[row*9 + columnRelatedSquare1 + 0].includes(value) ||
+								   placements[row*9 + columnRelatedSquare1 + 1].includes(value) ||
+								   placements[row*9 + columnRelatedSquare1 + 2].includes(value)) &&
+								  (placements[otherRow1*9 + columnRelatedSquare1 + 0].includes(value) ||
+								   placements[otherRow1*9 + columnRelatedSquare1 + 1].includes(value) ||
+								   placements[otherRow1*9 + columnRelatedSquare1 + 2].includes(value)) &&
+								 (!placements[otherRow2*9 + columnRelatedSquare1 + 0].includes(value) ||
+								  !placements[otherRow2*9 + columnRelatedSquare1 + 1].includes(value) ||
+								  !placements[otherRow2*9 + columnRelatedSquare1 + 2].includes(value))))) ||
+								   
+							   ((((placements[row*9 + columnRelatedSquare1 + 0].includes(value) ||
+								   placements[row*9 + columnRelatedSquare1 + 1].includes(value) ||
+								   placements[row*9 + columnRelatedSquare1 + 2].includes(value)) &&
+								  (placements[otherRow2*9 + columnRelatedSquare1 + 0].includes(value) ||
+								   placements[otherRow2*9 + columnRelatedSquare1 + 1].includes(value) ||
+								   placements[otherRow2*9 + columnRelatedSquare1 + 2].includes(value)) &&
+								 (!placements[otherRow1*9 + columnRelatedSquare1 + 0].includes(value) ||
+								  !placements[otherRow1*9 + columnRelatedSquare1 + 1].includes(value) ||
+								  !placements[otherRow1*9 + columnRelatedSquare1 + 2].includes(value)))) &&
+								(((placements[row*9 + columnRelatedSquare1 + 0].includes(value) ||
+								   placements[row*9 + columnRelatedSquare1 + 1].includes(value) ||
+								   placements[row*9 + columnRelatedSquare1 + 2].includes(value)) &&
+								  (placements[otherRow2*9 + columnRelatedSquare1 + 0].includes(value) ||
+								   placements[otherRow2*9 + columnRelatedSquare1 + 1].includes(value) ||
+								   placements[otherRow2*9 + columnRelatedSquare1 + 2].includes(value)) &&
+								 (!placements[otherRow1*9 + columnRelatedSquare1 + 0].includes(value) ||
+								  !placements[otherRow1*9 + columnRelatedSquare1 + 1].includes(value) ||
+								  !placements[otherRow1*9 + columnRelatedSquare1 + 2].includes(value)))))) {
+						return true;
+					}
+					return false;
+				}
+				
+				countSolutions(grid, cell, value) {
+					let row = Math.floor(cell / 9);
+					let column = cell % 9;
+					let startRow = Math.floor(row / 3) * 3;
+					let startColumn = Math.floor(column / 3) * 3;
+					
+					let rowPlacements = {};
+					let columnPlacements = {};
+					let squarePlacements = {};
+					let gridPlacements = [];
+					
+					for (let i = 0; i < 81; i++) {
+						if (grid[i] === 0) {
+							if (Math.floor(i/9) === row) {
+								rowPlacements[i] = this.getPlacements(grid, i);
+							}
+							if (i % 9 === column) {
+								columnPlacements[i] = this.getPlacements(grid, i);
+							}
+							if (Math.floor(i/9) >= startRow && Math.floor(i/9) <= startRow + 2 && i % 9 >= startColumn && i % 9 <= startColumn + 2) {
+								squarePlacements[i] = this.getPlacements(grid, i);
+							}
+							gridPlacements.push(this.getPlacements(grid, i));
+						} else {
+							gridPlacements.push([]);
+							rowPlacements[i] = [];
+							columnPlacements[i] = [];
+							squarePlacements[i] = [];
+						}
+					}
+					
+					let countRowPlacements = 0;
+					let countColumnPlacements = 0;
+					let countSquarePlacements = 0;
+					for (let rowCell in rowPlacements) {
+						if (rowPlacements[rowCell].includes(value)) {
+							if (rowPlacements[rowCell].length === 1) {
+								return 1;
+							}
+							let ruleOut = this.ruleOutViaCrossData(gridPlacements, rowCell, value);
+							if (ruleOut) {
+								continue;
+							} else {
+								countRowPlacements++;
+							}
+						}
+					}
+					for (let columnCell in columnPlacements) {
+						if (columnPlacements[columnCell].includes(value)) {
+							if (columnPlacements[columnCell].length === 1) {
+								return 1;
+							}
+							let ruleOut = this.ruleOutViaCrossData(gridPlacements, columnCell, value);
+							if (ruleOut) {
+								continue;
+							} else {
+								countColumnPlacements++;
+							}
+						}
+					}
+					for (let squareCell in squarePlacements) {
+						if (squarePlacements[squareCell].includes(value)) {
+							if (squarePlacements[squareCell].length === 1) {
+								return 1;
+							}
+							let ruleOut = this.ruleOutViaCrossData(gridPlacements, squareCell, value);
+							if (ruleOut) {
+								continue;
+							} else {
+								countSquarePlacements++;
+							}
+						}
+					}
+					
+					if (countRowPlacements === 1 || countColumnPlacements === 1 || countSquarePlacements === 1) {
+						return 1;
+					} else {
+						return 2;
+					}
+				}
+				
+				removeValues(toRemove) {
+				
+					let indexList = Array.from({length: 81}, (_, i) => i).sort(() => Math.random() - 0.5);
+					indexList.sort(() => Math.random() - 0.5);
+					let removed = 0;
+					
+					for (let index of indexList) {
+						if (removed >= toRemove) {
+							break;
+						}
+						
+						let value = this.grid[index];
+						this.grid[index] = 0;
+						
+						if (this.countSolutions(this.grid, index, value) !== 1) {
+							this.grid[index] = value;
+						} else {
+							removed++;
+						}
+					}
+					console.log('removed ' + removed + ' values.');
+				}
+				
+				updateTime() {
+					const now = Date.now() - this.startTime;
+					const date = new Date(now);
+					const minutes = date.getMinutes();
+					let seconds = '0' + date.getSeconds();
+					seconds = seconds.slice(-2);
+					$('p.time').text(minutes + ':' + seconds);
+				}
+				
+				setDifficultyDisplay() {
+					$('p.game-difficulty').text((this.difficulty.charAt(0).toUpperCase() + this.difficulty.slice(1)));
+				}
+				
+				activateButtons() {
+					let cells = this.cells;
+					$('.number-button').on('click', function() {
+						for (let i = 0; i < cells.length; i++) {
+							let cell = cells[i];
+							if (cells[i].selected === 'true' && cells[i].type === 'user') {
+								if ($('#note-toggle').attr('mode') === 'disabled') {
+									cell.playerFill(parseInt($(this).attr('number')));
+									break;
+								} else {
+									cell.note(parseInt($(this).attr('number')));
+									break;
+								}
+								
+							}
+						}
+					});
+				}
+				
+				create(grid) {
+					this.element.empty();
+					for (let i = 1; i <= 9; i++) {
+						this.element.append($(`<div class="square" number="${i}"></div>`));
+					}
+					
+					let columnNumber = 0;
+					let rowNumber = 1;
+					let squareNumber = 1;
+					for (let i = 1; i <= 81; i++) {
+						if (columnNumber === 9) {
+							columnNumber = 1;
+							if (rowNumber === 3 || rowNumber === 6) {
+								squareNumber++;
+							} else {
+								squareNumber = squareNumber - 2;
+							}
+							rowNumber++;
+						} else {
+							if (columnNumber === 3 || columnNumber === 6) {
+								squareNumber++;
+							}
+							columnNumber++;
+						}
+						let newCell = new Cell(this, grid[i-1], i);
+						this.cells.push(newCell);
+						this.element.children(`.square[number="${squareNumber}"]`).append(newCell.element);
+						newCell.initialize();
+					}
+					this.activateButtons();
+					this.autoGrid = this.grid;
+					this.startTime = Date.now();
+					this.setDifficultyDisplay();
+				}
+				
+				saveMove(cellId, moveType, prevVal, newVal) {
+					let values = {
+						cellId: cellId,
+						moveType: moveType,
+						prevVal: prevVal,
+						newVal: newVal
+					};
+					this.moves.push(values);
+				}
+				
+				undo() {
+					this.undoFlag = true;
+					let lastMove = this.moves[this.moves.length-1];
+					if (lastMove === undefined) {
+						this.undoFlag = false;
+						return;
+					}
+					if (lastMove.moveType === 'note') {
+						if (lastMove.prevVal === 0) {
+							this.cells[lastMove.cellId].removeNote(lastMove.newVal);
+						} else {
+							this.cells[lastMove.cellId].note(lastMove.prevVal);
+						}
+					} else {
+						if (lastMove.prevVal === 0) {
+							this.cells[lastMove.cellId].empty();
+						} else {
+							this.cells[lastMove.cellId].playerFill(lastMove.prevVal);
+						}
+					}
+					this.moves.splice(this.moves.length-1, 1);
+					
+					for (let i = 0; i < this.cells.length; i++) {
+						this.cells[i].deselect();
+					}
+				}
+				
+				autoNote() {
+					/*
+					for (let i = 0; i < this.grid.length; i++) {
+						let placements = this.getPlacements(this.grid, i);
+						this.cells[i].select();
+						for (let j = 0; j < placements.length; j++) {
+							this.cells[i].note(placements[j]);
+						}
+						//this.cells[i].updateDisplay();
+					}*/
+				}
+				
+			}
+
+			class App {
+				constructor(element) {
+					this.element = element;
+					this.view = 'view-title-screen';
+					this.savedGame;
+				}
+				
+				updateDisplay() {
+					// Handle view changes
+					let selectedView;
+					let objectReference = this;
+					this.element.children('div[class^="view-"]').each(function () {
+						if ($(this).hasClass(objectReference.view)) {
+							selectedView = $(this);
+						} else {
+							if ($(this).css('display') === 'flex') {
+								$(this).fadeOut(150);
+							}
+						}
+					});
+					if (selectedView.css('display') === 'none') {
+						selectedView.delay(150).fadeIn(150);
+					}
+					if (selectedView.attr('nav') === 'true') {
+						if ($('.navigation-bar').css('display') === 'none') {
+							$('.navigation-bar').fadeIn(150);
+						}
+						
+					} else {
+						if ($('.navigation-bar').css('display') === 'flex') {
+							$('.navigation-bar').fadeOut(150);
+						}
+					}
+				}
+				
+				updateView(viewName) {
+					this.view = viewName;
+					this.updateDisplay();
+				}
+			}
+
+			const gameState = (function () {
+				let game;
+				const squareData = {
+					1: {rows: [1, 2, 3], columns: [1, 2, 3]},
+					2: {rows: [1, 2, 3], columns: [4, 5, 6]},
+					3: {rows: [1, 2, 3], columns: [7, 8, 9]},
+					4: {rows: [4, 5, 6], columns: [1, 2, 3]},
+					5: {rows: [4, 5, 6], columns: [4, 5, 6]},
+					6: {rows: [4, 5, 6], columns: [7, 8, 9]},
+					7: {rows: [7, 8, 9], columns: [1, 2, 3]},
+					8: {rows: [7, 8, 9], columns: [4, 5, 6]},
+					9: {rows: [7, 8, 9], columns: [7, 8, 9]}
+				};
+				
+				window.getGame = function() {
+					return game;
+				}
+				
+				window.referenceSquareData = function() {
+					return squareData;
+				}
+				
+				window.newGame = function (difficulty) {
+					game = new Puzzle($('.sudoku-grid'), difficulty);
+				}
+			})();
+
+			const sudokuPondApp = (function() {
+				const app = new App($('#app'));
+				
+				window.fetchSPApp = function() {
+					return app;
+				};
+			})();
+			
+			$('#play').on('click', function() {
+				const app = fetchSPApp();
+				app.updateView('view-play-screen');
+			});
+			
+			$('.difficulty').on('click', function() {
+				const app = fetchSPApp();
+				app.updateView('view-game');
+				newGame($(this).attr('difficulty'));
+			});
+			
+			$('#back').on('click', function() {
+				const app = fetchSPApp();
+				let newView;
+				if (app.view === 'view-play-screen') {
+					newView = 'view-title-screen';
+				} else if (app.view === 'view-game') {
+					newView = 'view-play-screen';
+				}
+				app.updateView(newView);
+			});
+			
+			$('#note-toggle').on('click', function() {
+				if ($(this).attr('mode') === 'disabled') {
+					$(this).attr('mode', 'enabled');
+				} else {
+					$(this).attr('mode', 'disabled');
+				}
+			});
+			
+			$('#undo').on('click', function() {
+				const game = getGame();
+				game.undo();
+			});
+			
+			$('#erase').on('click', function() {
+				const game = getGame();
+				game.autoNote();
+			});
+
+			$(document).ready(function() {
+				let app = fetchSPApp();
+				let pond = new Pond($('.pond'));
+			});
+		
+		</script>
+		<script>
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.register('/service-worker.js')
+				.then(function(registration) {
+					console.log('Service worker started');
+				})
+				.catch(function(error) {
+					console.log('Service worker failed, error:', error);
+				});
+			}
+		</script>
+	</body>
+</html>
